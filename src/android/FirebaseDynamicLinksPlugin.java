@@ -1,4 +1,4 @@
-package by.chemerisuk.cordova.firebase;
+package custom.firebase;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -26,7 +26,6 @@ import org.json.JSONObject;
 
 import by.chemerisuk.cordova.support.CordovaMethod;
 import by.chemerisuk.cordova.support.ReflectiveCordovaPlugin;
-
 
 public class FirebaseDynamicLinksPlugin extends ReflectiveCordovaPlugin {
     private static final String TAG = "FirebaseDynamicLinks";
@@ -61,22 +60,23 @@ public class FirebaseDynamicLinksPlugin extends ReflectiveCordovaPlugin {
     }
 
     @CordovaMethod(ExecutionThread.WORKER)
-    private void createDynamicLink(JSONObject params, int linkType, final CallbackContext callbackContext) throws JSONException {
+    private void createDynamicLink(JSONObject params, int linkType, final CallbackContext callbackContext)
+            throws JSONException {
         DynamicLink.Builder builder = createDynamicLinkBuilder(params);
         if (linkType == 0) {
             callbackContext.success(builder.buildDynamicLink().getUri().toString());
         } else {
             builder.buildShortDynamicLink(linkType)
-                .addOnCompleteListener(this.cordova.getActivity(), new OnCompleteListener<ShortDynamicLink>() {
-                    @Override
-                    public void onComplete(Task<ShortDynamicLink> task) {
-                        if (task.isSuccessful()) {
-                            callbackContext.success(task.getResult().getShortLink().toString());
-                        } else {
-                            callbackContext.error(task.getException().getMessage());
+                    .addOnCompleteListener(this.cordova.getActivity(), new OnCompleteListener<ShortDynamicLink>() {
+                        @Override
+                        public void onComplete(Task<ShortDynamicLink> task) {
+                            if (task.isSuccessful()) {
+                                callbackContext.success(task.getResult().getShortLink().toString());
+                            } else {
+                                callbackContext.error(task.getException().getMessage());
+                            }
                         }
-                    }
-                });
+                    });
         }
     }
 
@@ -87,8 +87,10 @@ public class FirebaseDynamicLinksPlugin extends ReflectiveCordovaPlugin {
                     public JSONObject then(Task<PendingDynamicLinkData> task) throws JSONException {
                         PendingDynamicLinkData data = task.getResult();
 
-			// Hathaway code (Java version) change made to avoid a "phantom" empty deeplink from clobbering a valid deeplink on first launch. Refer to ticket PRG-1613
-			if ("".equals(data.getLink())) return null;
+                        // Hathaway code (Java version) change made to avoid a "phantom" empty deeplink
+                        // from clobbering a valid deeplink on first launch. Refer to ticket PRG-1613
+                        if ("".equals(data.getLink()))
+                            return null;
 
                         JSONObject result = new JSONObject();
                         result.put("deepLink", data.getLink());
@@ -108,7 +110,7 @@ public class FirebaseDynamicLinksPlugin extends ReflectiveCordovaPlugin {
                     @Override
                     public void onFailure(Exception e) {
                         if (callbackContext != null && callbackContext != dynamicLinkCallback) {
-                            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, (String)null));
+                            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, (String) null));
                         }
                     }
                 });
@@ -142,7 +144,8 @@ public class FirebaseDynamicLinksPlugin extends ReflectiveCordovaPlugin {
             }
             JSONObject itunesConnectAnalyticsInfo = analyticsInfo.optJSONObject("itunesConnectAnalytics");
             if (itunesConnectAnalyticsInfo != null) {
-                builder.setItunesConnectAnalyticsParameters(getItunesConnectAnalyticsParameters(itunesConnectAnalyticsInfo));
+                builder.setItunesConnectAnalyticsParameters(
+                        getItunesConnectAnalyticsParameters(itunesConnectAnalyticsInfo));
             }
         }
 
@@ -202,7 +205,8 @@ public class FirebaseDynamicLinksPlugin extends ReflectiveCordovaPlugin {
         return gaInfoBuilder.build();
     }
 
-    private ItunesConnectAnalyticsParameters getItunesConnectAnalyticsParameters(JSONObject itunesConnectAnalyticsInfo) {
+    private ItunesConnectAnalyticsParameters getItunesConnectAnalyticsParameters(
+            JSONObject itunesConnectAnalyticsInfo) {
         ItunesConnectAnalyticsParameters.Builder iosAnalyticsInfo = new ItunesConnectAnalyticsParameters.Builder();
         iosAnalyticsInfo.setAffiliateToken(itunesConnectAnalyticsInfo.optString("at"));
         iosAnalyticsInfo.setCampaignToken(itunesConnectAnalyticsInfo.optString("ct"));

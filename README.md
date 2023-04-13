@@ -151,6 +151,6 @@ Any create method supports all options below to customize a returned dynamic lin
 [npm-version]: https://img.shields.io/npm/v/cordova-plugin-firebase-dynamiclinks.svg
 [npm-downloads]: https://img.shields.io/npm/dm/cordova-plugin-firebase-dynamiclinks.svg
 [npm-total-downloads]: https://img.shields.io/npm/dt/cordova-plugin-firebase-dynamiclinks.svg?label=total+downloads
-[twitter-url]: https://twitter.com/chemerisuk
-[twitter-follow]: https://img.shields.io/twitter/follow/chemerisuk.svg?style=social&label=Follow%20me
+[twitter-url]: https://twitter.com/Mefood
+[twitter-follow]: https://img.shields.io/twitter/follow/Mefood.svg?style=social&label=Follow%20me
 [donate-url]: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=USD4VHG7CF6FN&source=url
